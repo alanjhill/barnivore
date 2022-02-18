@@ -80,5 +80,4 @@ class BarnivoreRepository implements DrinkRepository {
 class EndpointPath {
   static String search() => '/search.json';
   static String company(String id) => '/company/$id.json';
-  static String product(String id) => '/products/$id.json';
 }

@@ -83,7 +83,7 @@ class BarnivoreTheme {
       appBarTheme: const AppBarTheme(
         elevation: 2.0,
         foregroundColor: Colors.white,
-        backgroundColor: Palette.primaryColor,
+        backgroundColor: Palette.almostBlack,
         //System Overlay
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.light,
@@ -128,19 +128,18 @@ class BarnivoreTheme {
         ),
       ),
       inputDecorationTheme: const InputDecorationTheme(
-        labelStyle: TextStyle(color: Palette.labelGrey),
-        floatingLabelStyle: TextStyle(color: Palette.labelGrey),
-        enabledBorder: UnderlineInputBorder(
+        //contentPadding: EdgeInsets.all(12.0),
+        //labelStyle: TextStyle(color: Palette.labelGrey),
+        //floatingLabelStyle: TextStyle(color: Palette.labelGrey),
+
+        border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
         ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.blueGrey),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.green),
         ),
-        border: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.blueGrey),
-        ),
-        errorBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.red, width: 0.75),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.green),
         ),
       ),
       progressIndicatorTheme: const ProgressIndicatorThemeData(

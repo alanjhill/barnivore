@@ -1,65 +1,45 @@
-import 'package:barnivore/core/constants.dart';
 import 'package:barnivore/features/search_flow/search/company.dart';
-import 'package:barnivore/features/search_flow/search/product.dart';
+import 'package:barnivore/features/search_flow/search_flow_controller.dart';
 import 'package:barnivore/theme/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CompanyProductListCard extends StatelessWidget {
-  const CompanyProductListCard({
+class CompanyListCard extends ConsumerWidget {
+  final Company company;
+  final int index;
+  final Function onTapHandler;
+
+  const CompanyListCard({
     Key? key,
     required this.company,
-    required this.product,
     required this.index,
-    required this.onTap,
+    required this.onTapHandler,
   }) : super(key: key);
 
-  final Company company;
-  final Product product;
-  final int index;
-  final VoidCallback onTap;
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Material(
       key: ValueKey('company-$index'),
-      //color: genre.isSelected ? Theme.of(context).colorScheme.primary : Colors.transparent,
       child: InkWell(
-        onTap: onTap,
+        onTap: () {
+          ref.read(searchFlowControllerProvider.notifier).setCompanyId(company.id);
+          onTapHandler(ref);
+        },
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          padding: const EdgeInsets.all(16.0),
           child: ListTile(
             dense: true,
             visualDensity: VisualDensity.comfortable,
-            leading: _getStatus(product.status),
             title: Text(
-              product.productName,
+              company.companyName,
               style: const TextStyle(
                 decoration: TextDecoration.underline,
               ),
             ),
-            subtitle: Text(company.companyName),
-            trailing: Text(product.status),
+            subtitle: Text(company.country),
+            trailing: const Icon(Icons.favorite_border),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _getStatus(String status) {
-    if (status == 'Vegan Friendly') {
-      return SizedBox(
-        width: 32,
-        height: 32,
-        child: DecoratedBox(
-          decoration: BoxDecoration(color: Palette.veganFriendly),
-        ),
-      );
-    }
-    return SizedBox(
-      width: 32,
-      height: 32,
-      child: DecoratedBox(
-        decoration: BoxDecoration(color: Palette.veganUnfriendly),
       ),
     );
   }

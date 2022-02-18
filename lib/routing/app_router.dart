@@ -1,6 +1,6 @@
 import 'package:barnivore/features/company/company_screen.dart';
 import 'package:barnivore/features/home/home_screen.dart';
-import 'package:barnivore/features/products/products_screen.dart';
+import 'package:barnivore/features/search_flow/product/products_screen.dart';
 import 'package:barnivore/features/search_flow/search/search_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +15,7 @@ class AppRouter {
       case HomeScreen.routeName:
         return MaterialPageRoute(builder: (_) => HomeScreen());
       case SearchScreen.routeName:
-        return MaterialPageRoute(builder: (_) => SearchScreen());
+        return MaterialPageRoute(builder: (_) => const SearchScreen());
       case CompanyScreen.routeName:
         return MaterialPageRoute(builder: (_) => const CompanyScreen());
       case ProductsScreen.routeName:

@@ -1,3 +1,4 @@
+import 'package:barnivore/features/search_flow/product/products_screen.dart';
 import 'package:barnivore/features/search_flow/search/search_screen.dart';
 import 'package:barnivore/features/search_flow/search_flow_controller.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ class SearchFlow extends ConsumerWidget {
       physics: const NeverScrollableScrollPhysics(),
       children: [
         SearchScreen(),
+        ProductsScreen(),
       ],
     );
   }

@@ -20,8 +20,9 @@ class Palette {
   static const Color almostBlack = Color(0xFF040B13);
   static const Color lightGrey = Color(0xfffafafa);
 
-  static Color veganFriendly = Color(0xff309943);
-  static Color veganUnfriendly = Color(0xffee2317);
+  static Color Green = Color(0xff309943);
+  static Color Red = Color(0xffee2317);
+  static Color Yellow = Color(0xfffecc45);
 
   static const Color labelGrey = Color(0xff9a9a9a);
 

@@ -3,6 +3,7 @@ import 'package:barnivore/features/search_flow/drink_repository.dart';
 import 'package:barnivore/features/search_flow/search/company.dart';
 import 'package:barnivore/features/search_flow/search/company_products.dart';
 import 'package:barnivore/features/search_flow/search/product.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multiple_result/multiple_result.dart';
 
@@ -12,16 +13,16 @@ final searchServiceProvider = Provider<SearchService>((ref) {
 });
 
 abstract class SearchService {
-  //Future<Result<Failure, List<Company>>> getCompanyList(String keyword);
-  //Future<Result<Failure, List<Product>>> getProductList(int companyId);
-  Future<Result<Failure, List<CompanyProduct>>> getCompanyProductList(String keyword);
+  Future<Result<Failure, List<Company>>> getCompanyList(String keyword);
+  Future<Result<Failure, List<Product>>> getProductList(int companyId);
+  //Future<Result<Failure, List<CompanyProduct>>> getCompanyProductList(String keyword);
 }
 
 class BarnivoreSearchService implements SearchService {
   final DrinkRepository _drinkRepository;
   BarnivoreSearchService(this._drinkRepository);
 
-  @override
+/*  @override
   Future<Result<Failure, List<CompanyProduct>>> getCompanyProductList(String keyword) async {
     List<CompanyProduct> companyProductsList = [];
     final companyList = await getCompanyList(keyword);
@@ -40,9 +41,10 @@ class BarnivoreSearchService implements SearchService {
     return Error(
       Failure(message: 'Something went wrong'),
     );
-  }
+  }*/
 
   Future<Result<Failure, List<Company>>> getCompanyList(String keyword) async {
+    debugPrint('SearchService.getCompanyList()');
     try {
       final companyEntities = await _drinkRepository.getCompanyData(keyword);
       final companyList = companyEntities.map((e) => Company.fromEntity(e)).toList(growable: false);
@@ -53,6 +55,7 @@ class BarnivoreSearchService implements SearchService {
   }
 
   Future<Result<Failure, List<Product>>> getProductList(int companyId) async {
+    debugPrint('SearchService.getProductList()');
     try {
       final productEntities = await _drinkRepository.getProductData(companyId);
       final productList = productEntities.map((e) => Product.fromEntity(e)).toList(growable: false);

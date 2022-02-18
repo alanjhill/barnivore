@@ -6,12 +6,14 @@ class ProductEntity {
   final int companyId;
   final String productName;
   final String status;
+  final String redYellowGreen;
 
   const ProductEntity({
     required this.id,
     required this.companyId,
     required this.productName,
     required this.status,
+    required this.redYellowGreen,
   });
 
   @override
@@ -25,6 +27,7 @@ class ProductEntity {
       companyId: map['company_id'],
       productName: map['product_name'],
       status: map['status'],
+      redYellowGreen: map['red_yellow_green'],
     );
   }
 
@@ -36,8 +39,9 @@ class ProductEntity {
           id == other.id &&
           companyId == other.companyId &&
           productName == other.productName &&
-          status == other.status;
+          status == other.status &&
+          redYellowGreen == other.redYellowGreen;
 
   @override
-  int get hashCode => id.hashCode ^ companyId.hashCode ^ productName.hashCode ^ status.hashCode;
+  int get hashCode => id.hashCode ^ companyId.hashCode ^ productName.hashCode ^ status.hashCode ^ redYellowGreen.hashCode;
 }
