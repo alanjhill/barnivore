@@ -1,6 +1,5 @@
-import 'package:barnivore/features/search_flow/search/company.dart';
-import 'package:barnivore/features/search_flow/search/company_products.dart';
-import 'package:barnivore/features/search_flow/search/product.dart';
+import 'package:barnivore/features/search_flow/search/company_bean.dart';
+import 'package:barnivore/features/search_flow/search/product_bean.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,10 +7,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class SearchFlowState {
   final PageController pageController;
   final String keyword;
-  final int companyId;
-  final int productId;
-  final AsyncValue<List<Company>> companys;
-  final AsyncValue<List<Product>> products;
+  final String? companyId;
+  final String? productId;
+  final AsyncValue<List<CompanyBean>> companys;
+  final AsyncValue<List<ProductBean>> products;
 
   const SearchFlowState({
     required this.pageController,
@@ -25,10 +24,10 @@ class SearchFlowState {
   SearchFlowState copyWith({
     PageController? pageController,
     String? keyword,
-    int? companyId,
-    int? productId,
-    AsyncValue<List<Company>>? companys,
-    AsyncValue<List<Product>>? products,
+    String? companyId,
+    String? productId,
+    AsyncValue<List<CompanyBean>>? companys,
+    AsyncValue<List<ProductBean>>? products,
   }) {
     return SearchFlowState(
       pageController: pageController ?? this.pageController,

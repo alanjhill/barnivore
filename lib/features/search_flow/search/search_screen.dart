@@ -22,6 +22,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         slivers: <Widget>[
           const CustomAppBar(),
           CustomPersistentHeader(onSearchHandler: _search),
+          const SliverPadding(padding: EdgeInsets.only(top: 16.0)),
           CompanySearchResultsList(onTapHandler: _getProducts),
         ],
       ),
@@ -33,7 +34,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   void _getProducts(WidgetRef ref) async {
-    int companyId = ref.read(searchFlowControllerProvider).companyId;
+    String companyId = ref.read(searchFlowControllerProvider).companyId!;
     await ref.read(searchFlowControllerProvider.notifier).getProducts(companyId);
     Navigator.of(context).push(ProductsScreen.route(fullscreenDialog: true));
   }

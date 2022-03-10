@@ -1,7 +1,8 @@
 import 'package:barnivore/core/failure.dart';
-import 'package:barnivore/features/search_flow/search/company.dart';
+import 'package:barnivore/features/search_flow/search/company_bean.dart';
 import 'package:barnivore/features/search_flow/search/company_list_card.dart';
 import 'package:barnivore/features/search_flow/search_flow_controller.dart';
+import 'package:barnivore/models/Company.dart';
 import 'package:barnivore/widgets/empty_content.dart';
 import 'package:barnivore/widgets/faiure_screen.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class CompanySearchResultsList extends ConsumerWidget {
         );
   }
 
-  Widget _buildList(List<Company> companyList) {
+  Widget _buildList(List<CompanyBean> companyList) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {

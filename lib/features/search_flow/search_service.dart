@@ -1,8 +1,7 @@
 import 'package:barnivore/core/failure.dart';
 import 'package:barnivore/features/search_flow/drink_repository.dart';
-import 'package:barnivore/features/search_flow/search/company.dart';
-import 'package:barnivore/features/search_flow/search/company_products.dart';
-import 'package:barnivore/features/search_flow/search/product.dart';
+import 'package:barnivore/features/search_flow/search/company_bean.dart';
+import 'package:barnivore/features/search_flow/search/product_bean.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multiple_result/multiple_result.dart';
@@ -13,8 +12,9 @@ final searchServiceProvider = Provider<SearchService>((ref) {
 });
 
 abstract class SearchService {
-  Future<Result<Failure, List<Company>>> getCompanyList(String keyword);
-  Future<Result<Failure, List<Product>>> getProductList(int companyId);
+  Future<Result<Failure, List<CompanyBean>>> getCompanyList(String keyword);
+  Future<Result<Failure, List<ProductBean>>> getProductList(String companyId);
+  Future<Result<Failure, List<String?>>> typeahead(String keyword);
   //Future<Result<Failure, List<CompanyProduct>>> getCompanyProductList(String keyword);
 }
 
@@ -43,22 +43,33 @@ class BarnivoreSearchService implements SearchService {
     );
   }*/
 
-  Future<Result<Failure, List<Company>>> getCompanyList(String keyword) async {
+  Future<Result<Failure, List<String?>>> typeahead(String keyword) async {
+    debugPrint('SearchService.typeahead');
+    try {
+      final results = await _drinkRepository.typeahead(keyword);
+      final typeaheadList = results.map((e) => e.companyName).toList();
+      return Success(typeaheadList);
+    } on Failure catch (failure) {
+      return Error(failure);
+    }
+  }
+
+  Future<Result<Failure, List<CompanyBean>>> getCompanyList(String keyword) async {
     debugPrint('SearchService.getCompanyList()');
     try {
-      final companyEntities = await _drinkRepository.getCompanyData(keyword);
-      final companyList = companyEntities.map((e) => Company.fromEntity(e)).toList(growable: false);
+      final companyModels = await _drinkRepository.getCompanyData(keyword);
+      final companyList = companyModels.map((e) => CompanyBean.fromModel(e)).toList(growable: false);
       return Success(companyList);
     } on Failure catch (failure) {
       return Error(failure);
     }
   }
 
-  Future<Result<Failure, List<Product>>> getProductList(int companyId) async {
+  Future<Result<Failure, List<ProductBean>>> getProductList(String companyId) async {
     debugPrint('SearchService.getProductList()');
     try {
-      final productEntities = await _drinkRepository.getProductData(companyId);
-      final productList = productEntities.map((e) => Product.fromEntity(e)).toList(growable: false);
+      final productModels = await _drinkRepository.getProductData(companyId);
+      final productList = productModels.map((e) => ProductBean.fromModel(e)).toList(growable: false);
       return Success(productList);
     } on Failure catch (failure) {
       return Error(failure);

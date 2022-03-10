@@ -1,0 +1,24 @@
+type Company @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  companyName: String
+  country: String
+  keywords: String
+  status: String
+}
+
+type Product @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  companyId: ID
+  productName: String
+  status: String
+  redYellowGreen: RedYellowGreen
+  belongsToCompany: Company @hasOne
+  keywords: String
+}
+
+enum RedYellowGreen {
+  RED
+  YELLOW
+  GREEN
+}
+ 

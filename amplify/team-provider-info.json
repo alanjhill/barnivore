@@ -1,0 +1,28 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-barnivore-staging-182004-authRole",
+      "UnauthRoleArn": "arn:aws:iam::016278190012:role/amplify-barnivore-staging-182004-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::016278190012:role/amplify-barnivore-staging-182004-authRole",
+      "Region": "us-west-1",
+      "DeploymentBucketName": "amplify-barnivore-staging-182004-deployment",
+      "UnauthRoleName": "amplify-barnivore-staging-182004-unauthRole",
+      "StackName": "amplify-barnivore-staging-182004",
+      "StackId": "arn:aws:cloudformation:us-west-1:016278190012:stack/amplify-barnivore-staging-182004/8aba0520-9fd5-11ec-8016-024df04e6493",
+      "AmplifyAppId": "d82nk1ik4xtqg"
+    }
+  },
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-barnivore-dev-204729-authRole",
+      "UnauthRoleArn": "arn:aws:iam::016278190012:role/amplify-barnivore-dev-204729-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::016278190012:role/amplify-barnivore-dev-204729-authRole",
+      "Region": "us-west-1",
+      "DeploymentBucketName": "amplify-barnivore-dev-204729-deployment",
+      "UnauthRoleName": "amplify-barnivore-dev-204729-unauthRole",
+      "StackName": "amplify-barnivore-dev-204729",
+      "StackId": "arn:aws:cloudformation:us-west-1:016278190012:stack/amplify-barnivore-dev-204729/34158200-a02d-11ec-92e2-0611b6340e75",
+      "AmplifyAppId": "d82nk1ik4xtqg"
+    }
+  }
+}

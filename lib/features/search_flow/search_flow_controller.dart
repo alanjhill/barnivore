@@ -1,4 +1,4 @@
-import 'package:barnivore/features/search_flow/search/company.dart';
+import 'package:barnivore/features/search_flow/search/company_bean.dart';
 import 'package:barnivore/features/search_flow/search_service.dart';
 import 'package:barnivore/features/search_flow/search_flow_state.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +9,8 @@ final searchFlowControllerProvider = StateNotifierProvider.autoDispose<SearchFlo
     SearchFlowState(
       pageController: PageController(),
       keyword: '',
-      companyId: -1,
-      productId: -1,
+      companyId: null,
+      productId: null,
       companys: const AsyncValue.data([]),
       products: const AsyncValue.data([]),
     ),
@@ -41,9 +41,9 @@ class SearchFlowController extends StateNotifier<SearchFlowState> {
     );
   }
 
-  Future<void> getProducts(int companyId) async {
+  Future<void> getProducts(String companyId) async {
     state = state.copyWith(companyId: companyId);
-    final result = await _searchService.getProductList(state.companyId);
+    final result = await _searchService.getProductList(state.companyId!);
 
     result.when(
       (error) {
@@ -60,11 +60,11 @@ class SearchFlowController extends StateNotifier<SearchFlowState> {
     state = state.copyWith(keyword: keyword);
   }
 
-  void setCompanyId(int companyId) {
+  void setCompanyId(String companyId) {
     state = state.copyWith(companyId: companyId);
   }
 
-  Company getCompany(int companyId) {
+  CompanyBean getCompany(String companyId) {
     final company = state.companys.asData?.value.firstWhere((c) => c.id == companyId);
     return company!;
   }

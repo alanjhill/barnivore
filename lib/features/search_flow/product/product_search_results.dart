@@ -1,8 +1,6 @@
 import 'package:barnivore/core/failure.dart';
-import 'package:barnivore/features/search_flow/search/company.dart';
-import 'package:barnivore/features/search_flow/search/company_list_card.dart';
 import 'package:barnivore/features/search_flow/product/product_list_card.dart';
-import 'package:barnivore/features/search_flow/search/product.dart';
+import 'package:barnivore/features/search_flow/search/product_bean.dart';
 import 'package:barnivore/features/search_flow/search_flow_controller.dart';
 import 'package:barnivore/widgets/empty_content.dart';
 import 'package:barnivore/widgets/faiure_screen.dart';
@@ -19,7 +17,7 @@ class ProductSearchResultsList extends ConsumerWidget {
           data: (productList) => productList.isNotEmpty ? _buildList(ref, productList) : const SliverToBoxAdapter(child: EmptyContent()),
           loading: () {
             debugPrint('>>> ProductSearchResultsList.loading');
-            return SliverToBoxAdapter(
+            return const SliverToBoxAdapter(
               child: const Center(
                 child: CircularProgressIndicator(),
               ),
@@ -35,13 +33,13 @@ class ProductSearchResultsList extends ConsumerWidget {
         );
   }
 
-  Widget _buildList(WidgetRef ref, List<Product> productList) {
+  Widget _buildList(WidgetRef ref, List<ProductBean> productList) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
           final product = productList[index];
           final companyId = ref.read(searchFlowControllerProvider).companyId;
-          final company = ref.read(searchFlowControllerProvider.notifier).getCompany(companyId);
+          final company = ref.read(searchFlowControllerProvider.notifier).getCompany(companyId!);
           if (index.isEven) {
             return ProductListCard(company: company, product: product, index: index, onTapHandler: onTapHandler);
           }

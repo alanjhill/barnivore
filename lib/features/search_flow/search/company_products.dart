@@ -1,5 +1,5 @@
-import 'package:barnivore/features/search_flow/search/company.dart';
-import 'package:barnivore/features/search_flow/search/product.dart';
+import 'package:barnivore/models/Company.dart';
+import 'package:barnivore/models/Product.dart';
 
 class CompanyProduct {
   final Company company;

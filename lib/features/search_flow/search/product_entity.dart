@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+/*
 @immutable
 class ProductEntity {
   final int id;
@@ -45,3 +46,4 @@ class ProductEntity {
   @override
   int get hashCode => id.hashCode ^ companyId.hashCode ^ productName.hashCode ^ status.hashCode ^ redYellowGreen.hashCode;
 }
+*/

@@ -21,7 +21,7 @@ class ProductsScreen extends ConsumerWidget {
       body: CustomScrollView(
         slivers: <Widget>[
           const CustomAppBar(),
-/*          CustomPersistentHeader(onSearchHandler: _search),*/
+          const SliverPadding(padding: EdgeInsets.only(top: 16.0)),
           ProductSearchResultsList(onTapHandler: _selectProduct),
         ],
       ),

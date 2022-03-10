@@ -1,6 +1,8 @@
 import 'package:barnivore/core/constants.dart';
-import 'package:barnivore/features/search_flow/search/company.dart';
-import 'package:barnivore/features/search_flow/search/product.dart';
+import 'package:barnivore/features/search_flow/search/company_bean.dart';
+import 'package:barnivore/features/search_flow/search/product_bean.dart';
+import 'package:barnivore/models/Product.dart';
+import 'package:barnivore/models/RedYellowGreen.dart';
 import 'package:barnivore/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,8 +16,8 @@ class ProductListCard extends ConsumerWidget {
     required this.onTapHandler,
   }) : super(key: key);
 
-  final Company company;
-  final Product product;
+  final CompanyBean company;
+  final ProductBean product;
   final int index;
   final Function onTapHandler;
 
@@ -46,8 +48,8 @@ class ProductListCard extends ConsumerWidget {
     );
   }
 
-  Widget _getStatus(String redYellowGreen) {
-    if (redYellowGreen == 'Green') {
+  Widget _getStatus(RedYellowGreen redYellowGreen) {
+    if (redYellowGreen == RedYellowGreen.GREEN) {
       return SizedBox(
         width: 32,
         height: 32,
@@ -55,7 +57,7 @@ class ProductListCard extends ConsumerWidget {
           decoration: BoxDecoration(color: Palette.Green),
         ),
       );
-    } else if (redYellowGreen == 'Red') {
+    } else if (redYellowGreen == RedYellowGreen.RED) {
       return SizedBox(
         width: 32,
         height: 32,
