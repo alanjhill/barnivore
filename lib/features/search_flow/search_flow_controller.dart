@@ -1,8 +1,10 @@
 import 'package:barnivore/features/search_flow/search/company_bean.dart';
+import 'package:barnivore/features/search_flow/search/product_bean.dart';
 import 'package:barnivore/features/search_flow/search_service.dart';
 import 'package:barnivore/features/search_flow/search_flow_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:collection/collection.dart';
 
 final searchFlowControllerProvider = StateNotifierProvider.autoDispose<SearchFlowController, SearchFlowState>((ref) {
   return SearchFlowController(
@@ -13,6 +15,7 @@ final searchFlowControllerProvider = StateNotifierProvider.autoDispose<SearchFlo
       productId: null,
       companys: const AsyncValue.data([]),
       products: const AsyncValue.data([]),
+      productFavorites: const AsyncValue.data([]),
     ),
     ref.watch(searchServiceProvider),
   );
@@ -54,6 +57,31 @@ class SearchFlowController extends StateNotifier<SearchFlowState> {
         state = state.copyWith(products: updatedProductList);
       },
     );
+  }
+
+  Future<void> getProductFavorites() async {
+    final result = await _searchService.getProductFavorites();
+
+    result.when(
+      (error) {
+        state = state.copyWith(productFavorites: AsyncValue.error(error));
+      },
+      (productFavoritesList) {
+        final updatedProductFavorites = AsyncValue.data(productFavoritesList);
+        state = state.copyWith(productFavorites: updatedProductFavorites);
+      },
+    );
+  }
+
+  Future<void> setFavorite(String productId, bool favorite) async {
+    await _searchService.setProductFavorite(productId, favorite);
+    getProductFavorites();
+  }
+
+  bool isFavorite(String productId) {
+    final value = state.productFavorites.asData?.value;
+    final isFavorite = value!.firstWhereOrNull((pf) => pf.productId == productId);
+    return isFavorite != null ? true : false;
   }
 
   void setKeyword(String keyword) {

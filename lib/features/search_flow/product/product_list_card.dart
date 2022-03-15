@@ -1,6 +1,7 @@
 import 'package:barnivore/core/constants.dart';
 import 'package:barnivore/features/search_flow/search/company_bean.dart';
 import 'package:barnivore/features/search_flow/search/product_bean.dart';
+import 'package:barnivore/features/search_flow/search_flow_controller.dart';
 import 'package:barnivore/models/Product.dart';
 import 'package:barnivore/models/RedYellowGreen.dart';
 import 'package:barnivore/theme/palette.dart';
@@ -23,6 +24,8 @@ class ProductListCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final searchFlowController = ref.watch(searchFlowControllerProvider.notifier);
+    final isFavorite = searchFlowController.isFavorite(product.id);
     return Material(
       key: ValueKey('product-$index'),
       child: InkWell(
@@ -40,8 +43,13 @@ class ProductListCard extends ConsumerWidget {
             title: Text(
               product.productName,
             ),
-            subtitle: Text('${company.companyName}, ${company.country}\n\n${product.status}'),
-            trailing: const Icon(Icons.favorite_border),
+            subtitle: Text('${company.companyName}, ${company.country}\n${product.status}'),
+            trailing: GestureDetector(
+              onTap: () {
+                ref.read(searchFlowControllerProvider.notifier).setFavorite(product.id, !isFavorite);
+              },
+              child: isFavorite ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
+            ),
           ),
         ),
       ),

@@ -33,11 +33,11 @@ class Product extends Model {
   final String? _productName;
   final String? _status;
   final RedYellowGreen? _redYellowGreen;
-  final Company? _belongsToCompany;
   final String? _keywords;
+  final Company? _company;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
-  final String? _productBelongsToCompanyId;
+  final String? _productCompanyId;
 
   @override
   getInstanceType() => classType;
@@ -63,12 +63,12 @@ class Product extends Model {
     return _redYellowGreen;
   }
   
-  Company? get belongsToCompany {
-    return _belongsToCompany;
-  }
-  
   String? get keywords {
     return _keywords;
+  }
+  
+  Company? get company {
+    return _company;
   }
   
   TemporalDateTime? get createdAt {
@@ -79,22 +79,22 @@ class Product extends Model {
     return _updatedAt;
   }
   
-  String? get productBelongsToCompanyId {
-    return _productBelongsToCompanyId;
+  String? get productCompanyId {
+    return _productCompanyId;
   }
   
-  const Product._internal({required this.id, companyId, productName, status, redYellowGreen, belongsToCompany, keywords, createdAt, updatedAt, productBelongsToCompanyId}): _companyId = companyId, _productName = productName, _status = status, _redYellowGreen = redYellowGreen, _belongsToCompany = belongsToCompany, _keywords = keywords, _createdAt = createdAt, _updatedAt = updatedAt, _productBelongsToCompanyId = productBelongsToCompanyId;
+  const Product._internal({required this.id, companyId, productName, status, redYellowGreen, keywords, company, createdAt, updatedAt, productCompanyId}): _companyId = companyId, _productName = productName, _status = status, _redYellowGreen = redYellowGreen, _keywords = keywords, _company = company, _createdAt = createdAt, _updatedAt = updatedAt, _productCompanyId = productCompanyId;
   
-  factory Product({String? id, String? companyId, String? productName, String? status, RedYellowGreen? redYellowGreen, Company? belongsToCompany, String? keywords, String? productBelongsToCompanyId}) {
+  factory Product({String? id, String? companyId, String? productName, String? status, RedYellowGreen? redYellowGreen, String? keywords, Company? company, String? productCompanyId}) {
     return Product._internal(
       id: id == null ? UUID.getUUID() : id,
       companyId: companyId,
       productName: productName,
       status: status,
       redYellowGreen: redYellowGreen,
-      belongsToCompany: belongsToCompany,
       keywords: keywords,
-      productBelongsToCompanyId: productBelongsToCompanyId);
+      company: company,
+      productCompanyId: productCompanyId);
   }
   
   bool equals(Object other) {
@@ -110,9 +110,9 @@ class Product extends Model {
       _productName == other._productName &&
       _status == other._status &&
       _redYellowGreen == other._redYellowGreen &&
-      _belongsToCompany == other._belongsToCompany &&
       _keywords == other._keywords &&
-      _productBelongsToCompanyId == other._productBelongsToCompanyId;
+      _company == other._company &&
+      _productCompanyId == other._productCompanyId;
   }
   
   @override
@@ -131,22 +131,22 @@ class Product extends Model {
     buffer.write("keywords=" + "$_keywords" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null") + ", ");
-    buffer.write("productBelongsToCompanyId=" + "$_productBelongsToCompanyId");
+    buffer.write("productCompanyId=" + "$_productCompanyId");
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Product copyWith({String? id, String? companyId, String? productName, String? status, RedYellowGreen? redYellowGreen, Company? belongsToCompany, String? keywords, String? productBelongsToCompanyId}) {
+  Product copyWith({String? id, String? companyId, String? productName, String? status, RedYellowGreen? redYellowGreen, String? keywords, Company? company, String? productCompanyId}) {
     return Product._internal(
       id: id ?? this.id,
       companyId: companyId ?? this.companyId,
       productName: productName ?? this.productName,
       status: status ?? this.status,
       redYellowGreen: redYellowGreen ?? this.redYellowGreen,
-      belongsToCompany: belongsToCompany ?? this.belongsToCompany,
       keywords: keywords ?? this.keywords,
-      productBelongsToCompanyId: productBelongsToCompanyId ?? this.productBelongsToCompanyId);
+      company: company ?? this.company,
+      productCompanyId: productCompanyId ?? this.productCompanyId);
   }
   
   Product.fromJson(Map<String, dynamic> json)  
@@ -155,16 +155,16 @@ class Product extends Model {
       _productName = json['productName'],
       _status = json['status'],
       _redYellowGreen = enumFromString<RedYellowGreen>(json['redYellowGreen'], RedYellowGreen.values),
-      _belongsToCompany = json['belongsToCompany']?['serializedData'] != null
-        ? Company.fromJson(new Map<String, dynamic>.from(json['belongsToCompany']['serializedData']))
-        : null,
       _keywords = json['keywords'],
+      _company = json['company']?['serializedData'] != null
+        ? Company.fromJson(new Map<String, dynamic>.from(json['company']['serializedData']))
+        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null,
-      _productBelongsToCompanyId = json['productBelongsToCompanyId'];
+      _productCompanyId = json['productCompanyId'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'companyId': _companyId, 'productName': _productName, 'status': _status, 'redYellowGreen': enumToString(_redYellowGreen), 'belongsToCompany': _belongsToCompany?.toJson(), 'keywords': _keywords, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'productBelongsToCompanyId': _productBelongsToCompanyId
+    'id': id, 'companyId': _companyId, 'productName': _productName, 'status': _status, 'redYellowGreen': enumToString(_redYellowGreen), 'keywords': _keywords, 'company': _company?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'productCompanyId': _productCompanyId
   };
 
   static final QueryField ID = QueryField(fieldName: "product.id");
@@ -172,11 +172,11 @@ class Product extends Model {
   static final QueryField PRODUCTNAME = QueryField(fieldName: "productName");
   static final QueryField STATUS = QueryField(fieldName: "status");
   static final QueryField REDYELLOWGREEN = QueryField(fieldName: "redYellowGreen");
-  static final QueryField BELONGSTOCOMPANY = QueryField(
-    fieldName: "belongsToCompany",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Company).toString()));
   static final QueryField KEYWORDS = QueryField(fieldName: "keywords");
-  static final QueryField PRODUCTBELONGSTOCOMPANYID = QueryField(fieldName: "productBelongsToCompanyId");
+  static final QueryField COMPANY = QueryField(
+    fieldName: "company",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Company).toString()));
+  static final QueryField PRODUCTCOMPANYID = QueryField(fieldName: "productCompanyId");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Product";
     modelSchemaDefinition.pluralName = "Products";
@@ -218,17 +218,17 @@ class Product extends Model {
       ofType: ModelFieldType(ModelFieldTypeEnum.enumeration)
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasOne(
-      key: Product.BELONGSTOCOMPANY,
-      isRequired: false,
-      ofModelName: (Company).toString(),
-      associatedKey: Company.ID
-    ));
-    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Product.KEYWORDS,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasOne(
+      key: Product.COMPANY,
+      isRequired: false,
+      ofModelName: (Company).toString(),
+      associatedKey: Company.ID
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
@@ -246,7 +246,7 @@ class Product extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Product.PRODUCTBELONGSTOCOMPANYID,
+      key: Product.PRODUCTCOMPANYID,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));

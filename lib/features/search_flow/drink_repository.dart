@@ -1,16 +1,10 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:barnivore/core/failure.dart';
-import 'package:barnivore/features/search_flow/search/company_bean.dart';
-import 'package:barnivore/features/search_flow/search/company_entity.dart';
-import 'package:barnivore/features/search_flow/search/product_bean.dart';
-import 'package:barnivore/features/search_flow/search/product_entity.dart';
-import 'package:barnivore/main.dart';
 import 'package:barnivore/models/Company.dart';
 import 'package:barnivore/models/Product.dart';
-import 'package:dio/dio.dart';
+import 'package:barnivore/models/ProductFavorite.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,14 +14,32 @@ final drinkRepositoryProvider = Provider<DrinkRepository>((ref) {
 });
 
 abstract class DrinkRepository {
+  Future<List<Company>> listCompanies();
   Future<List<Company>> getCompanyData(String keyword);
+  Future<List<Product>> listProducts();
   Future<List<Product>> getProductData(String companyId);
   Future<List<Product>> queryProductData(String keyword);
+  Future<List<ProductFavorite>> listProductFavorites();
   Future<List<Company>> typeahead(String keyword);
+  Future<void> setProductFavorite(String productId, bool favorite);
 }
 
 class BarnivoreRepository implements DrinkRepository {
   BarnivoreRepository();
+
+  @override
+  Future<List<Company>> listCompanies() async {
+    try {
+      List<Company> results = await Amplify.DataStore.query(Company.classType);
+      return results;
+    } catch (e) {
+      debugPrint('listCompanies: $e');
+      throw Failure(
+        message: 'Could not get data',
+        exception: e as Exception,
+      );
+    }
+  }
 
   @override
   Future<List<Company>> getCompanyData(String keyword) async {
@@ -47,6 +59,20 @@ class BarnivoreRepository implements DrinkRepository {
   Future<List<Product>> getProductData(String companyId) async {
     try {
       List<Product> results = await Amplify.DataStore.query(Product.classType, where: Product.COMPANYID.eq(companyId));
+      return results;
+    } catch (e) {
+      debugPrint('getProductData: $e');
+      throw Failure(
+        message: 'Could not get data',
+        exception: e as Exception,
+      );
+    }
+  }
+
+  @override
+  Future<List<Product>> listProducts() async {
+    try {
+      List<Product> results = await Amplify.DataStore.query(Product.classType);
       return results;
     } catch (e) {
       debugPrint('getProductData: $e');
@@ -84,96 +110,60 @@ class BarnivoreRepository implements DrinkRepository {
       );
     }
   }
-}
-
-/*
-class _BarnivoreRepository implements DrinkRepository {
-  _BarnivoreRepository({required this.dio});
-  final Dio dio;
 
   @override
-  Future<List<Company>> getCompanyData(String keyword) async {
+  Future<List<ProductFavorite>> listProductFavorites() async {
     try {
-      final response = await dio.get(
-        '/search.json',
-        queryParameters: {
-          'keyword': keyword,
-        },
-      );
-      final results = List<Map<String, dynamic>>.from(response.data);
-      final companyData = results.map((e) => Company.fromJson(e)).toList();
-
-      return companyData;
-    } on DioError catch (e) {
-      if (e.error is SocketException) {
-        throw Failure(
-          message: 'No internet connection',
-          exception: e,
-        );
-      }
-
-      throw Failure(
-        message: e.response?.statusMessage ?? 'Something went wrong',
-        code: e.response?.statusCode,
-      );
-    }
-  }
-
-  @override
-  Future<List<Product>> getProductData(String companyId) async {
-    try {
-      final response = await dio.get(
-        '/company/$companyId.json',
-      );
-      final results = Map<String, dynamic>.from(response.data);
-      final company = results['company'];
-      final products = List<Map<String, dynamic>>.from(company['products']);
-      final productData = products.map((e) => Product.fromJson(e)).toList();
-
-      return productData;
-    } on DioError catch (e) {
-      if (e.error is SocketException) {
-        throw Failure(
-          message: 'No internet connection',
-          exception: e,
-        );
-      }
-
-      throw Failure(
-        message: e.response?.statusMessage ?? 'Something went wrong',
-        code: e.response?.statusCode,
-      );
-    }
-  }
-
-  @override
-  Future<List<String>> typeahead(String keyword) async {
-    try {
-      final response = await dio.get(
-        '/autocomplete',
-        queryParameters: {'term': keyword},
-      );
-      final results = List<String>.from(response.data);
-
+      List<ProductFavorite> results = await Amplify.DataStore.query(ProductFavorite.classType);
       return results;
-    } on DioError catch (e) {
-      if (e.error is SocketException) {
-        throw Failure(
-          message: 'No internet connection',
-          exception: e,
-        );
-      }
-
+    } catch (e) {
+      debugPrint('listProductFavorites: $e');
       throw Failure(
-        message: e.response?.statusMessage ?? 'Something went wrong',
-        code: e.response?.statusCode,
+        message: 'Could not get data',
+        exception: e as Exception,
       );
     }
   }
-}
 
-class EndpointPath {
-  static String search() => '/search.json';
-  static String company(String id) => '/company/$id.json';
+  @override
+  Future<void> setProductFavorite(String productId, bool favorite) async {
+    final List<ProductFavorite> productFavorites =
+        await Amplify.DataStore.query(ProductFavorite.classType, where: ProductFavorite.PRODUCTFAVORITEPRODUCTID.eq(productId));
+    if (productFavorites.isNotEmpty) {
+      if (!favorite) {
+        try {
+          debugPrint('>>> 1. setProductFavorite: $favorite');
+          final productFavorite = productFavorites.first;
+          await Amplify.DataStore.delete(productFavorite);
+        } catch (e) {
+          debugPrint('setProductFavorite: $e');
+          throw Failure(
+            message: 'Could not unset favorite',
+            exception: e as Exception,
+          );
+        }
+      }
+    } else {
+      try {
+        debugPrint('>>> 2. setProductFavorite: $favorite');
+        final products = await Amplify.DataStore.query(Product.classType, where: Product.ID.eq(productId));
+        if (products.isNotEmpty) {
+          final product = products.first;
+          final productFavorite = ProductFavorite(
+            productFavoriteProductId: product.id,
+          );
+          await Amplify.DataStore.save(productFavorite);
+          debugPrint('productFavorite: $productFavorite');
+        } else {
+          debugPrint('!!! Error, product does not exist');
+        }
+      } catch (e) {
+        debugPrint('setProductFavorite: $e');
+        throw Failure(
+          message: 'Could not set favorite',
+          exception: e as Exception,
+        );
+      }
+    }
+  }
 }
-*/

@@ -2,6 +2,8 @@ import 'package:barnivore/core/failure.dart';
 import 'package:barnivore/features/search_flow/drink_repository.dart';
 import 'package:barnivore/features/search_flow/search/company_bean.dart';
 import 'package:barnivore/features/search_flow/search/product_bean.dart';
+import 'package:barnivore/features/search_flow/search/product_favorite_bean.dart';
+import 'package:barnivore/models/ModelProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multiple_result/multiple_result.dart';
@@ -15,7 +17,8 @@ abstract class SearchService {
   Future<Result<Failure, List<CompanyBean>>> getCompanyList(String keyword);
   Future<Result<Failure, List<ProductBean>>> getProductList(String companyId);
   Future<Result<Failure, List<String?>>> typeahead(String keyword);
-  //Future<Result<Failure, List<CompanyProduct>>> getCompanyProductList(String keyword);
+  Future<Result<Failure, void>> setProductFavorite(String productId, bool favorite);
+  Future<Result<Failure, List<ProductFavoriteBean>>> getProductFavorites();
 }
 
 class BarnivoreSearchService implements SearchService {
@@ -43,6 +46,7 @@ class BarnivoreSearchService implements SearchService {
     );
   }*/
 
+  @override
   Future<Result<Failure, List<String?>>> typeahead(String keyword) async {
     debugPrint('SearchService.typeahead');
     try {
@@ -54,6 +58,7 @@ class BarnivoreSearchService implements SearchService {
     }
   }
 
+  @override
   Future<Result<Failure, List<CompanyBean>>> getCompanyList(String keyword) async {
     debugPrint('SearchService.getCompanyList()');
     try {
@@ -65,12 +70,36 @@ class BarnivoreSearchService implements SearchService {
     }
   }
 
+  @override
   Future<Result<Failure, List<ProductBean>>> getProductList(String companyId) async {
     debugPrint('SearchService.getProductList()');
     try {
       final productModels = await _drinkRepository.getProductData(companyId);
-      final productList = productModels.map((e) => ProductBean.fromModel(e)).toList(growable: false);
+      final productFavorites = await _drinkRepository.listProductFavorites();
+      final productList = productModels.map((e) => ProductBean.fromModel(e, productFavorites)).toList(growable: false);
       return Success(productList);
+    } on Failure catch (failure) {
+      return Error(failure);
+    }
+  }
+
+  @override
+  Future<Result<Failure, List<ProductFavoriteBean>>> getProductFavorites() async {
+    debugPrint('SearchService.getProductFavorites()');
+    try {
+      final productFavorites = await _drinkRepository.listProductFavorites();
+      final productFavoritesList = productFavorites.map((e) => ProductFavoriteBean.fromModel(e)).toList(growable: false);
+      return Success(productFavoritesList);
+    } on Failure catch (failure) {
+      return Error(failure);
+    }
+  }
+
+  @override
+  Future<Result<Failure, bool>> setProductFavorite(String productId, bool favorite) async {
+    try {
+      await _drinkRepository.setProductFavorite(productId, favorite);
+      return Success(favorite);
     } on Failure catch (failure) {
       return Error(failure);
     }

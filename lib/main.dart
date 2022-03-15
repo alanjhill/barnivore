@@ -1,8 +1,10 @@
+import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:barnivore/amplifyconfiguration.dart';
 import 'package:barnivore/data/data_load_service.dart';
 import 'package:barnivore/features/home/home_screen.dart';
+import 'package:barnivore/features/search_flow/drink_repository.dart';
 import 'package:barnivore/features/search_flow/search_flow.dart';
 import 'package:barnivore/models/ModelProvider.dart';
 import 'package:barnivore/providers/app_settings.dart';
@@ -14,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'amplifyconfiguration.dart';
+
 final dioProvider = Provider<Dio>((ref) {
   return Dio(BaseOptions(
     baseUrl: 'http://www.barnivore.com',
@@ -23,12 +27,13 @@ final dioProvider = Provider<Dio>((ref) {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final sharedPreferences = await SharedPreferences.getInstance();
+  final drinkRepository = BarnivoreRepository();
 
   runApp(
     ProviderScope(
       overrides: [
         dataLoadServiceProvider.overrideWithValue(
-          DataLoadService(),
+          DataLoadService(drinkRepository),
         ),
         sharedPreferencesServiceProvider.overrideWithValue(
           SharedPreferencesService(sharedPreferences),
@@ -64,16 +69,15 @@ class _MyAppState extends ConsumerState<MyApp> {
     _initializeApp();
   }
 
-  Future<void> _loadData() async {
-    final dataLoadService = ref.read(dataLoadServiceProvider);
-    await dataLoadService.deleteData();
-    await dataLoadService.loadCompanies();
-    await dataLoadService.loadBeers();
-  }
-
   Future<void> _initializeApp() async {
     // configure Amplify
     await _configureAmplify();
+
+    // Start
+    await Amplify.DataStore.start();
+
+    // delete data
+    await _deleteData();
 
     // load data
     await _loadData();
@@ -84,11 +88,18 @@ class _MyAppState extends ConsumerState<MyApp> {
     });
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    Amplify.DataStore.stop();
+  }
+
   Future<void> _configureAmplify() async {
     try {
       // add Amplify plugins
-      await Amplify.addPlugins([_dataStorePlugin]);
-
+      await Future.wait([
+        Amplify.addPlugins([_dataStorePlugin, AmplifyAPI(modelProvider: ModelProvider.instance)]),
+      ]);
       // configure Amplify
       //
       // note that Amplify cannot be configured more than once!
@@ -120,5 +131,15 @@ class _MyAppState extends ConsumerState<MyApp> {
         );
       },
     );
+  }
+
+  Future<void> _deleteData() async {
+    final dataLoadService = ref.read(dataLoadServiceProvider);
+    await dataLoadService.deleteData();
+  }
+
+  Future<void> _loadData() async {
+    final dataLoadService = ref.read(dataLoadServiceProvider);
+    await dataLoadService.loadData();
   }
 }

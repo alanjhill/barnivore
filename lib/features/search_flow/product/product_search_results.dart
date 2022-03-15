@@ -6,6 +6,7 @@ import 'package:barnivore/widgets/empty_content.dart';
 import 'package:barnivore/widgets/faiure_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:math' as math;
 
 class ProductSearchResultsList extends ConsumerWidget {
   final Function onTapHandler;
@@ -28,7 +29,7 @@ class ProductSearchResultsList extends ConsumerWidget {
             if (e is Failure) {
               return SliverToBoxAdapter(child: FailureBody(message: e.message));
             }
-            return SliverToBoxAdapter(child: const FailureBody(message: 'Something went wrong on our end'));
+            return const SliverToBoxAdapter(child: const FailureBody(message: 'Something went wrong on our end'));
           },
         );
   }
@@ -37,7 +38,8 @@ class ProductSearchResultsList extends ConsumerWidget {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          final product = productList[index];
+          final int itemIndex = index ~/ 2;
+          final product = productList[itemIndex];
           final companyId = ref.read(searchFlowControllerProvider).companyId;
           final company = ref.read(searchFlowControllerProvider.notifier).getCompany(companyId!);
           if (index.isEven) {
@@ -45,7 +47,13 @@ class ProductSearchResultsList extends ConsumerWidget {
           }
           return const Divider(height: 1, color: Colors.grey);
         },
-        childCount: productList.length,
+        semanticIndexCallback: (Widget widget, int localIndex) {
+          if (localIndex.isEven) {
+            return localIndex ~/ 2;
+          }
+          return null;
+        },
+        childCount: math.max(0, productList.length * 2 - 1),
       ),
     );
   }

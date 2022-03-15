@@ -22,16 +22,18 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'Company.dart';
 import 'Product.dart';
+import 'ProductFavorite.dart';
 
 export 'Company.dart';
 export 'Product.dart';
+export 'ProductFavorite.dart';
 export 'RedYellowGreen.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "870e5ad940660881b099e5bf8043b127";
+  String version = "e8258b84bbab6c361653664e6ce8c853";
   @override
-  List<ModelSchema> modelSchemas = [Company.schema, Product.schema];
+  List<ModelSchema> modelSchemas = [Company.schema, Product.schema, ProductFavorite.schema];
   static final ModelProvider _instance = ModelProvider();
   @override
   List<ModelSchema> customTypeSchemas = [];
@@ -44,6 +46,8 @@ class ModelProvider implements ModelProviderInterface {
         return Company.classType;
       case "Product":
         return Product.classType;
+      case "ProductFavorite":
+        return ProductFavorite.classType;
       default:
         throw Exception("Failed to find model in model provider for model name: " + modelName);
     }

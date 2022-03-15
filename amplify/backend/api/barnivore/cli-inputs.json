@@ -3,7 +3,7 @@
   "serviceConfiguration": {
     "apiName": "barnivore",
     "serviceName": "AppSync",
-    "gqlSchemaPath": "/tmp/amplify-d57ace60-374b-4ee6-95bd-3b8fd476ca2d/amplify/backend/api/barnivore/schema.graphql",
+    "gqlSchemaPath": "/tmp/amplify-21728d00-b67c-49a1-8886-2f6ad4256a09/amplify/backend/api/barnivore/schema.graphql",
     "defaultAuthType": {
       "mode": "API_KEY",
       "keyDescription": "api key description",

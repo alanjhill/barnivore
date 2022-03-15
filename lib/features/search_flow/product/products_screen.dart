@@ -6,9 +6,10 @@ import 'package:barnivore/features/search_flow/search_flow_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProductsScreen extends ConsumerWidget {
-  static const routeName = '/products';
+class ProductsScreen extends ConsumerStatefulWidget {
   const ProductsScreen({Key? key}) : super(key: key);
+
+  static const routeName = '/products';
 
   static route({bool fullscreenDialog = true}) => MaterialPageRoute(
         builder: (context) => const ProductsScreen(),
@@ -16,7 +17,18 @@ class ProductsScreen extends ConsumerWidget {
       );
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ProductsScreen> createState() => _ProductsScreenState();
+}
+
+class _ProductsScreenState extends ConsumerState<ProductsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(searchFlowControllerProvider.notifier).getProductFavorites();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[

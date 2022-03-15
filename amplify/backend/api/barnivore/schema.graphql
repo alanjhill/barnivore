@@ -1,3 +1,8 @@
+type ProductFavorite @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  product: Product @hasOne
+}
+
 type Company @model @auth(rules: [{allow: public}]) {
   id: ID!
   companyName: String
@@ -12,8 +17,8 @@ type Product @model @auth(rules: [{allow: public}]) {
   productName: String
   status: String
   redYellowGreen: RedYellowGreen
-  belongsToCompany: Company @hasOne
   keywords: String
+  company: Company @hasOne
 }
 
 enum RedYellowGreen {
